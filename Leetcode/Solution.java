@@ -1,24 +1,31 @@
-class Solution {
-    public long maximumTripletValue(int[] nums) {
-        long max = 0;
-        long tmp;
-        int l = nums.length;
 
-        for (int i = 0; i < l; i++)
+import java.util.Arrays;
+
+class Solution {
+    public long countGoodIntegers(int n, int k) {
+        int freq[] = new int[10];
+        long count = 0;
+        int now, tmp;
+        
+        int start = (10*n) / k;
+        if (k * 10 < n) start++;
+
+        for (int i = start; k*i < 100*n; i++)
         {
-            for (int j = i + 1; j < l; j++)
+            Arrays.fill(freq, 0);
+            tmp = 0;
+            now = k*i;
+
+            do
             {
-                for (int k = j + 1; k < l; k++)
-                {
-                    tmp = (long) (nums[i] - nums[j]) * nums[k];
-                    if (tmp > max)
-                    {
-                        max = tmp;
-                    }
-                }
+                freq[now % 10]++;
             }
+            while (now/10 != 0);
+
+            for (int num: freq) tmp += num % 2;
+            if (tmp < 2) count++;
         }
 
-        return max;
+        return count;
     }
 }
