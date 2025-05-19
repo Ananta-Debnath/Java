@@ -5,10 +5,41 @@ public class Main
 {
     public static void main(String[] args) {
         int n = Integer.parseInt(args[0]);
-            System.out.println(n);
-        for (int i = 0; i < n; i++) LibraryBranch.addBranch();
 
         Scanner sc = new Scanner(System.in);
+
+        for (int i = 0; i < n; i++)
+        {
+            LibraryBranch branch = LibraryBranch.addBranch();
+
+            System.out.print("Branch " + branch.getID() + ":\nBook Number: ");
+            int bookNum = sc.nextInt();
+            if (bookNum > 20)
+            {
+                System.out.println("Cannot have more than 20 books!");
+                bookNum = 20;
+            }
+
+            int bookId;
+            String bookTitle;
+            boolean availability;
+            for (int j = 0; j < bookNum; j++)
+            {
+                System.out.print("Book ID: ");
+                bookId = sc.nextInt();
+                sc.nextLine();
+
+                System.out.print("Book Title: ");
+                bookTitle = sc.nextLine();
+
+                System.out.print("Available: ");
+                availability = sc.nextBoolean();
+
+                branch.addBook(bookId, bookTitle, availability);
+            }
+        }
+
+        
         while (true)
         { 
             System.out.println("Menu:");

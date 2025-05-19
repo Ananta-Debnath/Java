@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class LibraryBranch
 {
     private static int branchNum = 0;
@@ -12,34 +10,11 @@ public class LibraryBranch
     LibraryBranch()
     {
         id = branchNum;
+    }
 
-        Scanner sc = new Scanner(System.in);
-
-        System.out.print("Branch " + id + ":\nBook Number: ");
-        bookNum = sc.nextInt();
-        if (bookNum > 20)
-        {
-            System.out.println("Cannot have more than 20 books!");
-            bookNum = 20;
-        }
-
-        int bookId;
-        String bookTitle;
-        boolean availability;
-        for (int i = 0; i < bookNum; i++)
-        {
-            System.out.print("Book ID: ");
-            bookId = sc.nextInt();
-            sc.nextLine();
-
-            System.out.print("Book Title: ");
-            bookTitle = sc.nextLine();
-
-            System.out.print("Available: ");
-            availability = sc.nextBoolean();
-
-            books[i] = new Book(bookId, bookTitle, availability);
-        }
+    public int getID()
+    {
+        return id;
     }
 
     public int getBookNum()
@@ -52,11 +27,18 @@ public class LibraryBranch
         return books[idx];
     }
 
-    public static void addBranch()
+    public void addBook(int id, String title, boolean availability)
+    {
+        books[bookNum++] = new Book(id, title, availability);
+    }
+
+    public static LibraryBranch addBranch()
     {
         if (branchNum < 10) branches[branchNum++] = new LibraryBranch();
 
         else System.out.println("Branch limit reached!");
+
+        return branches[branchNum-1];
     }
 
     public static void borrowBook(int branchID, int bookID)
