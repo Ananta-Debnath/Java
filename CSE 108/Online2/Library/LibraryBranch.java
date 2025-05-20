@@ -5,11 +5,12 @@ public class LibraryBranch
 
     private int id;
     private int bookNum;
-    private Book books[] = new Book[20];
+    private Book books[];
 
-    LibraryBranch()
+    LibraryBranch(int bookNum)
     {
         id = branchNum;
+        books = new Book[bookNum];
     }
 
     public int getID()
@@ -32,13 +33,18 @@ public class LibraryBranch
         books[bookNum++] = new Book(id, title, availability);
     }
 
-    public static LibraryBranch addBranch()
+    public static LibraryBranch addBranch(int bookNum)
     {
-        if (branchNum < 10) branches[branchNum++] = new LibraryBranch();
-
-        else System.out.println("Branch limit reached!");
-
-        return branches[branchNum-1];
+        if (branchNum < 10)
+        {
+            branches[branchNum++] = new LibraryBranch(bookNum);
+            return branches[branchNum-1];
+        }
+        else
+        {
+            System.out.println("Branch limit reached!");
+            return null;
+        }
     }
 
     public static void borrowBook(int branchID, int bookID)

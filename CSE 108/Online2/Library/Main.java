@@ -10,32 +10,34 @@ public class Main
 
         for (int i = 0; i < n; i++)
         {
-            LibraryBranch branch = LibraryBranch.addBranch();
-
-            System.out.print("Branch " + branch.getID() + ":\nBook Number: ");
+            System.out.print("Branch " + (i+1) + ":\nBook Number: ");
             int bookNum = sc.nextInt();
             if (bookNum > 20)
             {
                 System.out.println("Cannot have more than 20 books!");
                 bookNum = 20;
             }
+            LibraryBranch branch = LibraryBranch.addBranch(bookNum);
 
-            int bookId;
-            String bookTitle;
-            boolean availability;
-            for (int j = 0; j < bookNum; j++)
+            if (branch != null)
             {
-                System.out.print("Book ID: ");
-                bookId = sc.nextInt();
-                sc.nextLine();
+                int bookId;
+                String bookTitle;
+                boolean availability;
+                for (int j = 0; j < bookNum; j++)
+                {
+                    System.out.print("Book ID: ");
+                    bookId = sc.nextInt();
+                    sc.nextLine();
 
-                System.out.print("Book Title: ");
-                bookTitle = sc.nextLine();
+                    System.out.print("Book Title: ");
+                    bookTitle = sc.nextLine();
 
-                System.out.print("Available: ");
-                availability = sc.nextBoolean();
+                    System.out.print("Available: ");
+                    availability = sc.nextBoolean();
 
-                branch.addBook(bookId, bookTitle, availability);
+                    branch.addBook(bookId, bookTitle, availability);
+                }
             }
         }
 
@@ -82,3 +84,12 @@ public class Main
         }
     }
 }
+
+
+/*
+Branch a = new Branch();
+Branch b = a;
+a = new Branch();
+
+
+*/
