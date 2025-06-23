@@ -1,0 +1,73 @@
+public class Main {
+    public static void main(String[] args) {
+        PaymentGateway[] gateways = {
+            new CreditCardPayment("1234-5678-9876-5432"),  // valid
+            new CreditCardPayment("1234-5678-9876-543"),   // invalid length
+            new CreditCardPayment("abcd-efgh-ijkl-mnop"),  // invalid digits
+            new PayPalPayment("user@example.com"),         // valid
+            new PayPalPayment("userexample.com"),          // missing '@'
+            new PayPalPayment("@example.com"),            // invalid local part
+            new BkashPayment("01712345678"),               // valid
+            new BkashPayment("0198765432"),                // invalid length (10 digits)
+            new BkashPayment("02712345678")                // invalid prefix
+        };
+
+        double chargeAmount = 200.00;
+        for (PaymentGateway gw : gateways) {
+            String name = gw.getClass().getSimpleName();
+            System.out.printf("---- %s ----%n", name);
+            boolean success = gw.processPayment(chargeAmount);
+            System.out.printf("Payment successful? %b%n", success);
+            if (success) {
+                gw.refund(50.00);
+                double last = ((AbstractPayment) gw).getLastTransactionAmount();
+                System.out.printf("Last transaction amount: $%.2f%n", last);
+            }
+            System.out.println();
+        }
+    }
+}
+
+
+// Expected Output
+---- CreditCardPayment ----  
+// Charged $200.00 to credit card 1234-5678-9876-5432  
+// Payment successful? true  
+// Refund of $50.00 processed via CreditCardPayment  
+// Last transaction amount: $200.00  
+  
+// ---- CreditCardPayment ----  
+// Invalid credit card details: 1234-5678-9876-543  
+// Payment successful? false  
+  
+// ---- CreditCardPayment ----  
+// Invalid credit card details: abcd-efgh-ijkl-mnop  
+// Payment successful? false  
+  
+// ---- PayPalPayment ----  
+// Processed $200.00 via PayPal account user@example.com  
+// Payment successful? true  
+// Refund of $50.00 processed via PayPalPayment  
+// Last transaction amount: $200.00  
+  
+// ---- PayPalPayment ----  
+// Invalid PayPal account email: userexample.com  
+// Payment successful? false  
+  
+// ---- PayPalPayment ----  
+// Invalid PayPal account email: @example.com  
+// Payment successful? false  
+  
+// ---- BkashPayment ----  
+// Charged ৳200.00 from Bkash number 01712345678  
+// Payment successful? true  
+// Refund of ৳50.00 processed via BkashPayment  
+// Last transaction amount: ৳200.00  
+  
+// ---- BkashPayment ----  
+// Invalid Bkash number: 0198765432  
+// Payment successful? false  
+  
+// ---- BkashPayment ----  
+// Invalid Bkash number: 02712345678  
+// Payment successful? false 
