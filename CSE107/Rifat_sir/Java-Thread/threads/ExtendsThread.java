@@ -1,5 +1,3 @@
-package threads;
-
 class NewThread2 extends Thread {
 
     NewThread2() {
