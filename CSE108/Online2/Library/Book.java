@@ -11,6 +11,11 @@ public class Book
         this.availability = availability;
     }
 
+    Book(int id)
+    {
+        this(id, null, true);
+    }
+
     public int getID()
     {
         return id;
