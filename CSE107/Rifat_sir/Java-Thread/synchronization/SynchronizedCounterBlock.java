@@ -1,5 +1,3 @@
-package synchronization;
-
 class SharedCounter2 {
     private int counter;
 
@@ -33,8 +31,8 @@ class ThreadCounterSyncBlock implements Runnable {
     }
 
     public void run() {
-        synchronized(this) {
-         sharedCounter.count();
+        synchronized(sharedCounter) {
+            sharedCounter.count();
         }
     }
 }

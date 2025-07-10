@@ -1,5 +1,3 @@
-package threads;
-
 class NewThread3 implements Runnable {
     @Override
     public void run() {

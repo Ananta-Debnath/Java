@@ -1,5 +1,3 @@
-package threads;
-
 class NewThread1 implements Runnable {
     Thread t;
 

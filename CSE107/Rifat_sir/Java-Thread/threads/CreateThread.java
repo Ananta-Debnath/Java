@@ -1,5 +1,3 @@
-package threads;
-
 public class CreateThread  {
     public static void main(String[] args) {
         CreateThread ct = new CreateThread();

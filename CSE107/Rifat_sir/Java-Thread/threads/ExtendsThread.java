@@ -2,7 +2,7 @@ class NewThread2 extends Thread {
 
     NewThread2() {
         super("Extends Thread");
-        //start();
+        // start();
     }
 
     // This is the entry point for the thread.
@@ -26,7 +26,7 @@ public class ExtendsThread {
     public static void main(String[] args) throws Exception {
         NewThread2 newThread2 = new NewThread2();
         newThread2.start();
-        //newThread2.run();
+        // newThread2.run();
         for (int i = 500; i > 0; i--) {
             System.out.println("Main Thread: " + i);
             Thread.sleep(2000);
