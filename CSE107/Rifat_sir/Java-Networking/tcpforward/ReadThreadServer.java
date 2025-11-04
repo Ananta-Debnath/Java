@@ -1,0 +1,42 @@
+package tcpforward;
+
+import java.io.IOException;
+import java.util.HashMap;
+import util.SocketWrapper;
+
+public class ReadThreadServer implements Runnable {
+    private Thread thr;
+    private SocketWrapper socketWrapper;
+    public HashMap clientMap;
+
+    public ReadThreadServer(HashMap map, SocketWrapper socketWrapper) {
+        this.clientMap = map;
+        this.socketWrapper = socketWrapper;
+        this.thr = new Thread(this);
+        thr.start();
+    }
+
+    public void run() {
+        try {
+            while (true) {
+                Object o = socketWrapper.read();
+                if (o instanceof Message) {
+                    Message obj = (Message) o;
+                    String to = obj.getTo();
+                    SocketWrapper nu = (SocketWrapper) clientMap.get(to);
+                    if (nu != null) {
+                        nu.write(obj);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                socketWrapper.closeConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
