@@ -35,7 +35,7 @@ public class Order {
     private final List<OrderItem> items;
     private final String specialInstructions;
 
-    public Order(String orderId,
+    private Order(String orderId,
                  String customerName,
                  String phone,
                  DeliveryType deliveryType,
@@ -75,9 +75,93 @@ public class Order {
         this.items = Collections.unmodifiableList(new ArrayList<>(items));
     }
 
-    public Order(String orderId, String customerName, String phone, List<OrderItem> items) {
+    private Order(String orderId, String customerName, String phone, List<OrderItem> items) {
         this(orderId, customerName, phone, DeliveryType.PICKUP, "", PaymentMethod.CASH,
                 null, "", false, true, 0, false, items, "");
+    }
+
+    public static class Builder {
+        // Required fields with default values for optional fields
+        private String orderId;
+        private String customerName;
+        private String phone;
+        private DeliveryType deliveryType = DeliveryType.PICKUP;
+        private String deliveryAddress = "";
+        private PaymentMethod paymentMethod = PaymentMethod.CASH;
+        private LocalDateTime scheduledTime = null;
+        private String couponCode = "";
+        private boolean giftWrap = false;
+        private boolean cutleryRequired = true;
+        private int loyaltyPointsToRedeem = 0;
+        private boolean rushOrder = false;
+        private List<OrderItem> items;
+        private String specialInstructions = "";
+
+        // Builder constructor with required fields
+        public Builder(String orderId, String customerName, String phone, List<OrderItem> items) {
+            this.orderId = orderId;
+            this.customerName = customerName;
+            this.phone = phone;
+            this.items = items;
+        }
+
+        // Builder methods for optional fields
+        public Builder deliveryType(DeliveryType deliveryType) {
+            this.deliveryType = deliveryType;
+            return this;
+        }
+
+        public Builder deliveryAddress(String deliveryAddress) {
+            this.deliveryAddress = deliveryAddress;
+            return this;
+        }
+
+        public Builder paymentMethod(PaymentMethod paymentMethod) {
+            this.paymentMethod = paymentMethod;
+            return this;
+        }
+
+        public Builder scheduledTime(LocalDateTime scheduledTime) {
+            this.scheduledTime = scheduledTime;
+            return this;
+        }
+
+        public Builder couponCode(String couponCode) {
+            this.couponCode = couponCode;
+            return this;
+        }
+
+        public Builder giftWrap(boolean giftWrap) {
+            this.giftWrap = giftWrap;
+            return this;
+        }
+
+        public Builder cutleryRequired(boolean cutleryRequired) {
+            this.cutleryRequired = cutleryRequired;
+            return this;
+        }
+
+        public Builder loyaltyPointsToRedeem(int loyaltyPointsToRedeem) {
+            this.loyaltyPointsToRedeem = loyaltyPointsToRedeem;
+            return this;
+        }
+
+        public Builder rushOrder(boolean rushOrder) {
+            this.rushOrder = rushOrder;
+            return this;
+        }
+
+        public Builder specialInstructions(String specialInstructions) {
+            this.specialInstructions = specialInstructions;
+            return this;
+        }
+
+        // Final build method to create an Order instance
+        public Order build() {
+            return new Order(orderId, customerName, phone, deliveryType, deliveryAddress,
+                    paymentMethod, scheduledTime, couponCode, giftWrap, cutleryRequired,
+                    loyaltyPointsToRedeem, rushOrder, items, specialInstructions);
+        }
     }
 
     public String getOrderId() {
