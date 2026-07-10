@@ -15,7 +15,7 @@ public class OrderItem {
     private final boolean spicy;
     private final String note;
 
-    // private OrderItem(MenuItem menuItem, int quantity, Size size, boolean extraCheese, boolean spicy, String note) {
+    // public OrderItem(MenuItem menuItem, int quantity, Size size, boolean extraCheese, boolean spicy, String note) {
     //     this.menuItem = Objects.requireNonNull(menuItem, "Menu item cannot be null");
     //     if (quantity <= 0) {
     //         throw new IllegalArgumentException("Quantity must be positive");

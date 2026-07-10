@@ -35,49 +35,76 @@ public class Order {
     private final List<OrderItem> items;
     private final String specialInstructions;
 
-    private Order(String orderId,
-                 String customerName,
-                 String phone,
-                 DeliveryType deliveryType,
-                 String deliveryAddress,
-                 PaymentMethod paymentMethod,
-                 LocalDateTime scheduledTime,
-                 String couponCode,
-                 boolean giftWrap,
-                 boolean cutleryRequired,
-                 int loyaltyPointsToRedeem,
-                 boolean rushOrder,
-                 List<OrderItem> items,
-                 String specialInstructions) {
-        this.orderId = requireNonBlank(orderId, "Order id");
-        this.customerName = requireNonBlank(customerName, "Customer name");
-        this.phone = requireNonBlank(phone, "Phone");
-        this.deliveryType = deliveryType != null ? deliveryType : DeliveryType.PICKUP;
-        this.paymentMethod = paymentMethod != null ? paymentMethod : PaymentMethod.CASH;
-        this.scheduledTime = scheduledTime;
-        this.couponCode = couponCode != null ? couponCode.trim().toUpperCase() : "";
-        this.giftWrap = giftWrap;
-        this.cutleryRequired = cutleryRequired;
-        this.loyaltyPointsToRedeem = Math.max(0, loyaltyPointsToRedeem);
-        this.rushOrder = rushOrder;
-        this.specialInstructions = specialInstructions != null ? specialInstructions.trim() : "";
+    // public Order(String orderId,
+    //              String customerName,
+    //              String phone,
+    //              DeliveryType deliveryType,
+    //              String deliveryAddress,
+    //              PaymentMethod paymentMethod,
+    //              LocalDateTime scheduledTime,
+    //              String couponCode,
+    //              boolean giftWrap,
+    //              boolean cutleryRequired,
+    //              int loyaltyPointsToRedeem,
+    //              boolean rushOrder,
+    //              List<OrderItem> items,
+    //              String specialInstructions) {
+    //     this.orderId = requireNonBlank(orderId, "Order id");
+    //     this.customerName = requireNonBlank(customerName, "Customer name");
+    //     this.phone = requireNonBlank(phone, "Phone");
+    //     this.deliveryType = deliveryType != null ? deliveryType : DeliveryType.PICKUP;
+    //     this.paymentMethod = paymentMethod != null ? paymentMethod : PaymentMethod.CASH;
+    //     this.scheduledTime = scheduledTime;
+    //     this.couponCode = couponCode != null ? couponCode.trim().toUpperCase() : "";
+    //     this.giftWrap = giftWrap;
+    //     this.cutleryRequired = cutleryRequired;
+    //     this.loyaltyPointsToRedeem = Math.max(0, loyaltyPointsToRedeem);
+    //     this.rushOrder = rushOrder;
+    //     this.specialInstructions = specialInstructions != null ? specialInstructions.trim() : "";
+
+    //     if (this.deliveryType == DeliveryType.DELIVERY) {
+    //         this.deliveryAddress = requireNonBlank(deliveryAddress, "Delivery address");
+    //     } else {
+    //         this.deliveryAddress = deliveryAddress != null ? deliveryAddress.trim() : "";
+    //     }
+
+    //     Objects.requireNonNull(items, "Items cannot be null");
+    //     if (items.isEmpty()) {
+    //         throw new IllegalArgumentException("Order must contain at least one item");
+    //     }
+    //     this.items = Collections.unmodifiableList(new ArrayList<>(items));
+    // }
+
+    // public Order(String orderId, String customerName, String phone, List<OrderItem> items) {
+    //     this(orderId, customerName, phone, DeliveryType.PICKUP, "", PaymentMethod.CASH,
+    //             null, "", false, true, 0, false, items, "");
+    // }
+
+    private Order(Builder builder) {
+        this.orderId = requireNonBlank(builder.orderId, "Order id");
+        this.customerName = requireNonBlank(builder.customerName, "Customer name");
+        this.phone = requireNonBlank(builder.phone, "Phone");
+        this.deliveryType = builder.deliveryType;
+        this.paymentMethod = builder.paymentMethod;
+        this.scheduledTime = builder.scheduledTime;
+        this.couponCode = builder.couponCode;
+        this.giftWrap = builder.giftWrap;
+        this.cutleryRequired = builder.cutleryRequired;
+        this.loyaltyPointsToRedeem = Math.max(0, builder.loyaltyPointsToRedeem);
+        this.rushOrder = builder.rushOrder;
+        this.specialInstructions = builder.specialInstructions;
 
         if (this.deliveryType == DeliveryType.DELIVERY) {
-            this.deliveryAddress = requireNonBlank(deliveryAddress, "Delivery address");
+            this.deliveryAddress = requireNonBlank(builder.deliveryAddress, "Delivery address");
         } else {
-            this.deliveryAddress = deliveryAddress != null ? deliveryAddress.trim() : "";
+            this.deliveryAddress = builder.deliveryAddress;
         }
 
-        Objects.requireNonNull(items, "Items cannot be null");
-        if (items.isEmpty()) {
+        Objects.requireNonNull(builder.items, "Items cannot be null");
+        if (builder.items.isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item");
         }
-        this.items = Collections.unmodifiableList(new ArrayList<>(items));
-    }
-
-    private Order(String orderId, String customerName, String phone, List<OrderItem> items) {
-        this(orderId, customerName, phone, DeliveryType.PICKUP, "", PaymentMethod.CASH,
-                null, "", false, true, 0, false, items, "");
+        this.items = Collections.unmodifiableList(new ArrayList<>(builder.items));
     }
 
     public static class Builder {
@@ -158,9 +185,10 @@ public class Order {
 
         // Final build method to create an Order instance
         public Order build() {
-            return new Order(orderId, customerName, phone, deliveryType, deliveryAddress,
-                    paymentMethod, scheduledTime, couponCode, giftWrap, cutleryRequired,
-                    loyaltyPointsToRedeem, rushOrder, items, specialInstructions);
+            // return new Order(orderId, customerName, phone, deliveryType, deliveryAddress,
+            //         paymentMethod, scheduledTime, couponCode, giftWrap, cutleryRequired,
+            //         loyaltyPointsToRedeem, rushOrder, items, specialInstructions);
+            return new Order(this);
         }
     }
 
