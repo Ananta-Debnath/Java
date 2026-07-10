@@ -15,16 +15,76 @@ public class OrderItem {
     private final boolean spicy;
     private final String note;
 
-    public OrderItem(MenuItem menuItem, int quantity, Size size, boolean extraCheese, boolean spicy, String note) {
-        this.menuItem = Objects.requireNonNull(menuItem, "Menu item cannot be null");
-        if (quantity <= 0) {
+    // private OrderItem(MenuItem menuItem, int quantity, Size size, boolean extraCheese, boolean spicy, String note) {
+    //     this.menuItem = Objects.requireNonNull(menuItem, "Menu item cannot be null");
+    //     if (quantity <= 0) {
+    //         throw new IllegalArgumentException("Quantity must be positive");
+    //     }
+    //     this.quantity = quantity;
+    //     this.size = size != null ? size : Size.MEDIUM;
+    //     this.extraCheese = extraCheese;
+    //     this.spicy = spicy;
+    //     this.note = note != null ? note.trim() : "";
+    // }
+
+    private OrderItem(Builder builder) {
+        this.menuItem = Objects.requireNonNull(builder.menuItem, "Menu item cannot be null");
+        if (builder.quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
-        this.quantity = quantity;
-        this.size = size != null ? size : Size.MEDIUM;
-        this.extraCheese = extraCheese;
-        this.spicy = spicy;
-        this.note = note != null ? note.trim() : "";
+        this.quantity = builder.quantity;
+        this.size = builder.size;
+        this.extraCheese = builder.extraCheese;
+        this.spicy = builder.spicy;
+        this.note = builder.note;
+    }
+
+    public static class Builder {
+        // Required fields with default values for optional fields
+        private MenuItem menuItem;
+        private int quantity;
+        private Size size = Size.MEDIUM;
+        private boolean extraCheese = false;
+        private boolean spicy = false;
+        private String note = "";
+
+        // Constructor
+        public Builder(MenuItem menuItem, int quantity)
+        {
+            this.menuItem = menuItem;
+            this.quantity = quantity;
+        }
+
+        // Builders
+        public Builder size(Size size)
+        {
+            this.size = size;
+            return this;
+        }
+
+        public Builder extraCheese(boolean extraCheese)
+        {
+            this.extraCheese = extraCheese;
+            return this;
+        }
+
+        public Builder spicy(boolean spicy)
+        {
+            this.spicy = spicy;
+            return this;
+        }
+
+        public Builder note(String note)
+        {
+            this.note = note;
+            return this;
+        }
+
+        // Build method
+        public OrderItem build()
+        {
+            return new OrderItem(this);
+        }
     }
 
     public MenuItem getMenuItem() {
