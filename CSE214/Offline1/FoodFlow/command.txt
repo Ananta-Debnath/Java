@@ -1,0 +1,8 @@
+javac -d out src/**/*.java TestHarness.java
+
+java -cp out TestHarness
+
+java -cp out Main data/menu.csv
+
+
+RUN FROM ROOT DIRECTORY
