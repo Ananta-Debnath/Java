@@ -10,14 +10,14 @@ public class ExceptionTryNested {
                     b = r.nextInt();
                     c = r.nextInt();
                     a = 12345 / (b / c);
-                } catch (ArithmeticException e) {
+                } catch (ArithmeticException | NullPointerException e) {
                     System.out.println(e);
                     a = 0;
                 } finally {
-                    System.out.println(i + ": " + a);
+                    // System.out.println(i + ": " + a);
                 }
         } catch (ArithmeticException e) {
-            System.out.println(e);
+            System.out.println(e + "Last");
         }
     }
 }

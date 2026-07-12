@@ -1,23 +1,26 @@
-public class Main
-{
-    public static void main(String[] args)
+class Main {
+    static int x = 5, y;
+    int z;
     {
-        Thread t;
+        x = 5;
+        z = 20;
     }
-
-    /*
-    public static void main(String[] args)
-    {
-        int p[] = {1, 5, 8, 9, 10, 17, 17, 20, 24, 30};
-
-        for (int i = 0; i < p.length; i++)
-        {
-            for (int j = 1; j < i; j++)
-            {
-                if (p[i-j] + p[j] > p[i]) p[i] = p[i-j] + p[j];
-            }
-        }
-        for (int x : p) System.out.println(x);
+    static {
+        y = x * 4;
+        // z = y;
     }
-    */
+    int s1() {
+        return x * y;
+    }
+    static void s2() {
+        System.out.println("x = " + x);
+        System.out.println("y = " + y);
+        // System.out.println("z = " + z);
+    }
+    public static void main(String[] args) {
+        // s1();
+        System.out.println("x = " +x);
+        // System.out.println("z = " + z);
+        s2();
+    }
 }
