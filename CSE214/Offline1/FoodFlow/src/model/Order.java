@@ -134,17 +134,23 @@ public class Order {
 
         // Builder methods for optional fields
         public Builder deliveryType(DeliveryType deliveryType) {
-            this.deliveryType = deliveryType;
+            if (deliveryType != null) {
+                this.deliveryType = deliveryType;
+            }
             return this;
         }
 
         public Builder deliveryAddress(String deliveryAddress) {
-            this.deliveryAddress = deliveryAddress;
+            if (deliveryAddress != null) {
+                this.deliveryAddress = deliveryAddress.trim();
+            }
             return this;
         }
 
         public Builder paymentMethod(PaymentMethod paymentMethod) {
-            this.paymentMethod = paymentMethod;
+            if (paymentMethod != null) {
+                this.paymentMethod = paymentMethod;
+            }
             return this;
         }
 
@@ -154,7 +160,9 @@ public class Order {
         }
 
         public Builder couponCode(String couponCode) {
-            this.couponCode = couponCode;
+            if (couponCode != null) {
+                this.couponCode = couponCode.trim().toUpperCase();
+            }
             return this;
         }
 
@@ -179,7 +187,9 @@ public class Order {
         }
 
         public Builder specialInstructions(String specialInstructions) {
-            this.specialInstructions = specialInstructions;
+            if (specialInstructions != null) {
+                this.specialInstructions = specialInstructions.trim();
+            }
             return this;
         }
 

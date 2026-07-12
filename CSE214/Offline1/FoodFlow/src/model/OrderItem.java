@@ -58,7 +58,9 @@ public class OrderItem {
         // Builders
         public Builder size(Size size)
         {
-            this.size = size;
+            if (size != null) {
+                this.size = size;
+            }
             return this;
         }
 
@@ -76,7 +78,9 @@ public class OrderItem {
 
         public Builder note(String note)
         {
-            this.note = note;
+            if (note != null) {
+                this.note = note.trim();
+            }
             return this;
         }
 
