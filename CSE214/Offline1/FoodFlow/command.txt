@@ -1,8 +1,16 @@
+# MAC
 javac -d out src/**/*.java TestHarness.java
+
+# WINDOWS
+if not exist out mkdir out
+if exist sources.txt del sources.txt
+for /R src %f in (*.java) do @echo %f >> sources.txt
+echo TestHarness.java >> sources.txt
+javac -d out @sources.txt
+
 
 java -cp out TestHarness
 
 java -cp out Main data/menu.csv
-
 
 RUN FROM ROOT DIRECTORY
