@@ -44,11 +44,11 @@ public class SmartHomeTestRunner {
         testAccessRestrictedPowerUnaffected();
         testAccessRestrictedStatusAnnotation();
 
-        // section("5. Upgrade — TIMER CONTROLLED");
-        // testTimerControlledActivation();
-        // testTimerControlledExpiry();
-        // testTimerControlledManualDeactivateCancels();
-        // testTimerControlledStatusAnnotation();
+        section("5. Upgrade — TIMER CONTROLLED");
+        testTimerControlledActivation();
+        testTimerControlledExpiry();
+        testTimerControlledManualDeactivateCancels();
+        testTimerControlledStatusAnnotation();
 
         // section("6. Upgrade — POWER THROTTLED");
         // testPowerThrottledCaps();
@@ -247,39 +247,39 @@ public class SmartHomeTestRunner {
         assertNotContains("Unlocked no annotation", ar.getStatus(), "LOCKED");
     }
 
-    // // ============================================================
-    // //  5. TIMER CONTROL
-    // // ============================================================
+    // ============================================================
+    //  5. TIMER CONTROL
+    // ============================================================
 
-    // static void testTimerControlledActivation() {
-    //     TimerControlled tc = new TimerControlled(new SmartLight(), 60);
-    //     tc.activate();
-    //     assertEquals("Timer device active", 10.0, tc.getPowerUsage());
-    // }
+    static void testTimerControlledActivation() {
+        TimerControlled tc = new TimerControlled(new SmartLight(), 60);
+        tc.activate();
+        assertEquals("Timer device active", 10.0, tc.getPowerUsage());
+    }
 
-    // static void testTimerControlledExpiry() {
-    //     TimerControlled tc = new TimerControlled(new SmartLight(), 60);
-    //     tc.activate();
-    //     tc.simulateTimerExpiry();
-    //     assertEquals("Timer expired, device off", 0.0, tc.getPowerUsage());
-    // }
+    static void testTimerControlledExpiry() {
+        TimerControlled tc = new TimerControlled(new SmartLight(), 60);
+        tc.activate();
+        tc.simulateTimerExpiry();
+        assertEquals("Timer expired, device off", 0.0, tc.getPowerUsage());
+    }
 
-    // static void testTimerControlledManualDeactivateCancels() {
-    //     TimerControlled tc = new TimerControlled(new SmartLight(), 60);
-    //     tc.activate();
-    //     tc.deactivate();
-    //     // After manual deactivate, simulateTimerExpiry should do nothing
-    //     tc.simulateTimerExpiry();
-    //     assertEquals("Manual deactivate cancels timer", 0.0, tc.getPowerUsage());
-    // }
+    static void testTimerControlledManualDeactivateCancels() {
+        TimerControlled tc = new TimerControlled(new SmartLight(), 60);
+        tc.activate();
+        tc.deactivate();
+        // After manual deactivate, simulateTimerExpiry should do nothing
+        tc.simulateTimerExpiry();
+        assertEquals("Manual deactivate cancels timer", 0.0, tc.getPowerUsage());
+    }
 
-    // static void testTimerControlledStatusAnnotation() {
-    //     TimerControlled tc = new TimerControlled(new SmartLight(), 60);
-    //     tc.activate();
-    //     assertContains("Timer status annotation", tc.getStatus(), "auto-off");
-    //     tc.deactivate();
-    //     assertNotContains("No timer annotation when off", tc.getStatus(), "auto-off");
-    // }
+    static void testTimerControlledStatusAnnotation() {
+        TimerControlled tc = new TimerControlled(new SmartLight(), 60);
+        tc.activate();
+        assertContains("Timer status annotation", tc.getStatus(), "auto-off");
+        tc.deactivate();
+        assertNotContains("No timer annotation when off", tc.getStatus(), "auto-off");
+    }
 
     // // ============================================================
     // //  6. POWER THROTTLE

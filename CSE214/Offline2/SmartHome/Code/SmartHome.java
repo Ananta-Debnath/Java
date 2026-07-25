@@ -186,12 +186,25 @@ class AccessRestricted extends SmartComponentDecorator {
     }
 }
 
+class TimerControlled extends SmartComponentDecorator {
+    private double duration; // in seconds
 
+    public TimerControlled(SmartComponent component, double duration) {
+        super(component);
+        this.duration = duration;
+    }
 
+    public void simulateTimerExpiry() {
+        component.deactivate();
+    }
 
-
-
-
-public class SmartHome {
-    
+    @Override
+    public String getStatus() {
+        if (!component.getStatus().equals("OFF")) {
+            return component.getStatus() + " (auto-off " + duration + "s)";
+        }
+        else {
+            return component.getStatus();
+        }
+    }
 }
