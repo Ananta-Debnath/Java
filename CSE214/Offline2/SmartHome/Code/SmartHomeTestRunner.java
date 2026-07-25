@@ -37,12 +37,12 @@ public class SmartHomeTestRunner {
         testHomeAggregation();
         testHomeCascade();
 
-        // section("4. Upgrade — ACCESS RESTRICTED");
-        // testAccessRestrictedBlocksActivation();
-        // testAccessRestrictedUnlockWrongPin();
-        // testAccessRestrictedUnlockCorrectPin();
-        // testAccessRestrictedPowerUnaffected();
-        // testAccessRestrictedStatusAnnotation();
+        section("4. Upgrade — ACCESS RESTRICTED");
+        testAccessRestrictedBlocksActivation();
+        testAccessRestrictedUnlockWrongPin();
+        testAccessRestrictedUnlockCorrectPin();
+        testAccessRestrictedPowerUnaffected();
+        testAccessRestrictedStatusAnnotation();
 
         // section("5. Upgrade — TIMER CONTROLLED");
         // testTimerControlledActivation();
@@ -208,44 +208,44 @@ public class SmartHomeTestRunner {
         assertEquals("Home deactivated", 0.0, h.getPowerUsage());
     }
 
-    // // ============================================================
-    // //  4. ACCESS RESTRICTION TEST
-    // // ============================================================
+    // ============================================================
+    //  4. ACCESS RESTRICTION TEST
+    // ============================================================
 
-    // static void testAccessRestrictedBlocksActivation() {
-    //     AccessRestricted ar = new AccessRestricted(new SmartLight(), 1234);
-    //     ar.activate();
-    //     assertEquals("Locked light stays off", 0.0, ar.getPowerUsage());
-    // }
+    static void testAccessRestrictedBlocksActivation() {
+        AccessRestricted ar = new AccessRestricted(new SmartLight(), 1234);
+        ar.activate();
+        assertEquals("Locked light stays off", 0.0, ar.getPowerUsage());
+    }
 
-    // static void testAccessRestrictedUnlockWrongPin() {
-    //     AccessRestricted ar = new AccessRestricted(new SmartLight(), 1234);
-    //     ar.unlock(0000);
-    //     ar.activate();
-    //     assertEquals("Wrong PIN still locked", 0.0, ar.getPowerUsage());
-    // }
+    static void testAccessRestrictedUnlockWrongPin() {
+        AccessRestricted ar = new AccessRestricted(new SmartLight(), 1234);
+        ar.unlock(0000);
+        ar.activate();
+        assertEquals("Wrong PIN still locked", 0.0, ar.getPowerUsage());
+    }
 
-    // static void testAccessRestrictedUnlockCorrectPin() {
-    //     AccessRestricted ar = new AccessRestricted(new SmartLight(), 1234);
-    //     ar.unlock(1234);
-    //     ar.activate();
-    //     assertEquals("Correct PIN unlocks", 10.0, ar.getPowerUsage());
-    // }
+    static void testAccessRestrictedUnlockCorrectPin() {
+        AccessRestricted ar = new AccessRestricted(new SmartLight(), 1234);
+        ar.unlock(1234);
+        ar.activate();
+        assertEquals("Correct PIN unlocks", 10.0, ar.getPowerUsage());
+    }
 
-    // static void testAccessRestrictedPowerUnaffected() {
-    //     SmartLight l = new SmartLight();
-    //     l.activate();   // turn on BEFORE locking
-    //     AccessRestricted ar = new AccessRestricted(l, 1234);
-    //     // Locked but already running — power should still report
-    //     assertEquals("Locked but running device reports power", 10.0, ar.getPowerUsage());
-    // }
+    static void testAccessRestrictedPowerUnaffected() {
+        SmartLight l = new SmartLight();
+        l.activate();   // turn on BEFORE locking
+        AccessRestricted ar = new AccessRestricted(l, 1234);
+        // Locked but already running — power should still report
+        assertEquals("Locked but running device reports power", 10.0, ar.getPowerUsage());
+    }
 
-    // static void testAccessRestrictedStatusAnnotation() {
-    //     AccessRestricted ar = new AccessRestricted(new SmartLight(), 1234);
-    //     assertContains("Locked status annotation", ar.getStatus(), "LOCKED");
-    //     ar.unlock(1234);
-    //     assertNotContains("Unlocked no annotation", ar.getStatus(), "LOCKED");
-    // }
+    static void testAccessRestrictedStatusAnnotation() {
+        AccessRestricted ar = new AccessRestricted(new SmartLight(), 1234);
+        assertContains("Locked status annotation", ar.getStatus(), "LOCKED");
+        ar.unlock(1234);
+        assertNotContains("Unlocked no annotation", ar.getStatus(), "LOCKED");
+    }
 
     // // ============================================================
     // //  5. TIMER CONTROL

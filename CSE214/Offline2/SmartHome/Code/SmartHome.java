@@ -4,6 +4,7 @@ import java.util.List;
 interface SmartComponent {
     void activate();
     void deactivate();
+    String getStatus();
     double getPowerUsage();
 }
 
@@ -20,6 +21,7 @@ abstract class SmartDevice implements SmartComponent {
         isActive = false;
     }
 
+    @Override
     public String getStatus() {
         return isActive ? "ON" : "OFF";
     }
@@ -76,6 +78,15 @@ abstract class Area<T extends SmartComponent> implements SmartComponent {
     }
 
     @Override
+    public String getStatus() {
+        StringBuilder status = new StringBuilder(name + " Status:\n");
+        for (T child : children) {
+            status.append(" - ").append(child.getStatus()).append("\n");
+        }
+        return status.toString();
+    }
+
+    @Override
     public double getPowerUsage() {
         double totalPowerUsage = 0.0;
         for (T child : children) {
@@ -109,7 +120,71 @@ class Home extends Area<Room> {
     }
 }
 
+// Decorators for SmartComponent
+abstract class SmartComponentDecorator implements SmartComponent {
+    protected SmartComponent component;
 
+    public SmartComponentDecorator(SmartComponent component) {
+        this.component = component;
+    }
+
+    @Override
+    public void activate() {
+        component.activate();
+    }
+
+    @Override
+    public void deactivate() {
+        component.deactivate();
+    }
+
+    @Override
+    public double getPowerUsage() {
+        return component.getPowerUsage();
+    }
+}
+
+class AccessRestricted extends SmartComponentDecorator {
+    private int accessCode;
+    private boolean isLocked = true;
+
+    public AccessRestricted(SmartComponent component, int accessCode) {
+        super(component);
+        this.accessCode = accessCode;
+    }
+
+    @Override
+    public void activate() {
+        if (!isLocked) {
+            component.activate();
+        }
+    }
+
+    @Override
+    public void deactivate() {
+        if (!isLocked) {
+            component.deactivate();
+        }
+    }
+
+    public void unlock(int code) {
+        if (code == accessCode) {
+            isLocked = false;
+        }
+    }
+
+    public void lock() {
+        isLocked = true;
+    }
+
+    public String getStatus() {
+        if (isLocked) {
+            return component.getStatus() + " (LOCKED)";
+        } else {
+            return component.getStatus();
+        }
+    }
+}
 
 
 
