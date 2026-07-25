@@ -1,0 +1,7 @@
+
+javac -d demoOut SmartHomeSpaghettiDemo.java
+java -cp demoOut SmartHomeSpaghettiDemo > demo.txt
+
+
+javac -d out SmartHomeTestRunner.java SmartHomeDemo.java
+java -cp out SmartHomeTestRunner

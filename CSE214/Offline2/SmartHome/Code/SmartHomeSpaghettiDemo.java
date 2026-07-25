@@ -6,6 +6,12 @@ import java.util.*;
 //  Everything "works" but every new feature touches everything.
 // ============================================================
 
+/*
+Commands
+javac -d demoOut SmartHomeSpaghettiDemo.java
+java -cp demoOut SmartHomeSpaghettiDemo > demo.txt
+*/
+
 class Light {
     boolean on = false;
     // Pro upgrade flags

@@ -1,0 +1,119 @@
+
+=======================================================
+  DEMO A: Home Overview
+=======================================================
+Before activation:
+=== My Home ===
+[Living Room]
+  Light: OFF
+  Speaker: Idle
+[Bedroom]
+  Light: OFF
+  Thermostat: OFF
+Power: 0.0W
+
+After activation:
+=== My Home ===
+[Living Room]
+  Light: ON
+  Speaker: Playing
+[Bedroom]
+  Light: ON
+  Thermostat: ON
+Power: 175.0W
+
+=======================================================
+  DEMO B: AccessRestricted + TimerControlled
+=======================================================
+Step 1 — Activate while locked:
+  Status: Light: OFF [LOCKED]
+  Power:  0.0W
+
+Step 2 — Wrong PIN:
+    >> Unlock FAILED
+  Status: Light: OFF [LOCKED]
+
+Step 3 — Correct PIN, activate:
+    >> Unlock SUCCESS
+  Status: Light: ON (auto-off in 60s)
+  Power:  10.0W
+
+Step 4 — Timer expires:
+    >> Timer expired — auto-deactivating.
+  Status: Light: OFF
+  Power:  0.0W
+
+=======================================================
+  DEMO C: EcoMode (budget = 100W)
+=======================================================
+Activating with EcoMode:
+
+[ECO: 100.0W budget]
+[Office]
+  Light: ON
+  Light: ON
+  Thermostat: ON
+Power: 100.0W
+
+=======================================================
+  DEMO D: Order Matters
+=======================================================
+Setup 1: Throttled thermostat (80W) + EcoMode(100W)
+[ECO: 100.0W budget]
+[Lab-1]
+  Light: ON
+  Light: ON
+  Thermostat: ON [throttled to 80.0W]
+Power: 100.0W
+
+Setup 2: Raw thermostat (150W) + EcoMode(100W)
+[ECO: 100.0W budget]
+[Lab-2]
+  Light: ON
+  Light: ON
+  Thermostat: ON
+Power: 100.0W
+
+=======================================================
+  DEMO E: GuestMode + Mixed Enhancements
+=======================================================
+Activating GuestMode room:
+
+[GUEST MODE]
+[Guest Room]
+  Speaker: Playing
+  Thermostat: OFF [LOCKED] [guest-restricted]
+  Light: ON (auto-off in 120s)
+Guest-visible power: 15.0W
+
+=======================================================
+  DEMO F: prepareForNight wraps a Room
+=======================================================
+Step 1 — Activate while locked (nothing happens):
+  Status:
+[Kids Room]
+  Light: OFF
+  Speaker: Idle
+  Thermostat: OFF [LOCKED]
+  Power: 0.0W
+
+Step 2 — Unlock and activate:
+    >> Unlock SUCCESS
+  Status:
+[Kids Room]
+  Light: ON
+  Speaker: Playing
+  Thermostat: ON (auto-off in 3600s)
+  Power: 165.0W
+
+Step 3 — Timer expires (entire room shuts off):
+    >> Timer expired — auto-deactivating.
+  Status:
+[Kids Room]
+  Light: OFF
+  Speaker: Idle
+  Thermostat: OFF
+  Power: 0.0W
+
+Step 4 — Add to Home:
+  Home power: 0.0W
