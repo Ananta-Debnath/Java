@@ -27,15 +27,15 @@ public class SmartHomeTestRunner {
         testThermostatBasics();
         testSpeakerBasics();
 
-        // section("2. ROOM");
-        // testRoom();
-        // testRoomCascadeActivate();
-        // testRoomCascadeDeactivate();
-        // testRoomMixedDevices();
+        section("2. ROOM");
+        testRoom();
+        testRoomCascadeActivate();
+        testRoomCascadeDeactivate();
+        testRoomMixedDevices();
 
-        // section("3. HOME");
-        // testHomeAggregation();
-        // testHomeCascade();
+        section("3. HOME");
+        testHomeAggregation();
+        testHomeCascade();
 
         // section("4. Upgrade — ACCESS RESTRICTED");
         // testAccessRestrictedBlocksActivation();
@@ -140,73 +140,73 @@ public class SmartHomeTestRunner {
         assertEquals("Speaker off power", 0.0, s.getPowerUsage());
     }
 
-    // // ============================================================
-    // //  2. ROOM
-    // // ============================================================
+    // ============================================================
+    //  2. ROOM
+    // ============================================================
 
-    // static void testRoom() {
-    //     Room r = new Room("Test");
-    //     r.addDevice(new SmartLight());
-    //     r.addDevice(new SmartThermostat());
-    //     assertEquals("Room inactive power", 0.0, r.getPowerUsage());
-    // }
+    static void testRoom() {
+        Room r = new Room("Test");
+        r.addDevice(new SmartLight());
+        r.addDevice(new SmartThermostat());
+        assertEquals("Room inactive power", 0.0, r.getPowerUsage());
+    }
 
-    // static void testRoomCascadeActivate() {
-    //     Room r = new Room("Test");
-    //     r.addDevice(new SmartLight());
-    //     r.addDevice(new SmartThermostat());
-    //     r.activate();
-    //     assertEquals("Room active power", 160.0, r.getPowerUsage());
-    // }
+    static void testRoomCascadeActivate() {
+        Room r = new Room("Test");
+        r.addDevice(new SmartLight());
+        r.addDevice(new SmartThermostat());
+        r.activate();
+        assertEquals("Room active power", 160.0, r.getPowerUsage());
+    }
 
-    // static void testRoomCascadeDeactivate() {
-    //     Room r = new Room("Test");
-    //     SmartLight l = new SmartLight();
-    //     l.activate();
-    //     r.addDevice(l);
-    //     r.deactivate();
-    //     assertEquals("Room deactivated power", 0.0, r.getPowerUsage());
-    // }
+    static void testRoomCascadeDeactivate() {
+        Room r = new Room("Test");
+        SmartLight l = new SmartLight();
+        l.activate();
+        r.addDevice(l);
+        r.deactivate();
+        assertEquals("Room deactivated power", 0.0, r.getPowerUsage());
+    }
 
-    // static void testRoomMixedDevices() {
-    //     Room r = new Room("Test");
-    //     r.addDevice(new SmartLight());      // 10W
-    //     r.addDevice(new SmartLight());      // 10W
-    //     r.addDevice(new SmartSpeaker());    // 5W
-    //     r.activate();
-    //     assertEquals("Room 2 lights + speaker", 25.0, r.getPowerUsage());
-    // }
+    static void testRoomMixedDevices() {
+        Room r = new Room("Test");
+        r.addDevice(new SmartLight());      // 10W
+        r.addDevice(new SmartLight());      // 10W
+        r.addDevice(new SmartSpeaker());    // 5W
+        r.activate();
+        assertEquals("Room 2 lights + speaker", 25.0, r.getPowerUsage());
+    }
 
-    // // ============================================================
-    // //  3. HOME
-    // // ============================================================
+    // ============================================================
+    //  3. HOME
+    // ============================================================
 
-    // static void testHomeAggregation() {
-    //     Room r1 = new Room("R1");
-    //     r1.addDevice(new SmartLight());
+    static void testHomeAggregation() {
+        Room r1 = new Room("R1");
+        r1.addDevice(new SmartLight());
 
-    //     Room r2 = new Room("R2");
-    //     r2.addDevice(new SmartThermostat());
+        Room r2 = new Room("R2");
+        r2.addDevice(new SmartThermostat());
 
-    //     Home h = new Home("H");
-    //     h.addRoom(r1);
-    //     h.addRoom(r2);
-    //     h.activate();
-    //     assertEquals("Home total power", 160.0, h.getPowerUsage());
-    // }
+        Home h = new Home("H");
+        h.addRoom(r1);
+        h.addRoom(r2);
+        h.activate();
+        assertEquals("Home total power", 160.0, h.getPowerUsage());
+    }
 
-    // static void testHomeCascade() {
-    //     Room r1 = new Room("R1");
-    //     r1.addDevice(new SmartLight());
-    //     r1.addDevice(new SmartSpeaker());
+    static void testHomeCascade() {
+        Room r1 = new Room("R1");
+        r1.addDevice(new SmartLight());
+        r1.addDevice(new SmartSpeaker());
 
-    //     Home h = new Home("H");
-    //     h.addRoom(r1);
-    //     h.activate();
-    //     assertEquals("Home activated", 15.0, h.getPowerUsage());
-    //     h.deactivate();
-    //     assertEquals("Home deactivated", 0.0, h.getPowerUsage());
-    // }
+        Home h = new Home("H");
+        h.addRoom(r1);
+        h.activate();
+        assertEquals("Home activated", 15.0, h.getPowerUsage());
+        h.deactivate();
+        assertEquals("Home deactivated", 0.0, h.getPowerUsage());
+    }
 
     // // ============================================================
     // //  4. ACCESS RESTRICTION TEST
