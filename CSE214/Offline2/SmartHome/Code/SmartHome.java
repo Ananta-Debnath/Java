@@ -1,26 +1,37 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 interface SmartDevice {
     void activate();
     void deactivate();
     String getStatus();
     double getPowerUsage();
+
+    Class<?> getDeviceType();
 }
 
 abstract class PhysicalDevice implements SmartDevice {
     protected boolean isActive = false;
 
+    @Override
     public void activate() {
         isActive = true;
     }
 
+    @Override
     public void deactivate() {
         isActive = false;
     }
 
+    @Override
     public String getStatus() {
         return isActive ? "ON" : "OFF";
+    }
+
+    @Override
+    public Class<?> getDeviceType() {
+        return this.getClass();
     }
 }
 
@@ -51,9 +62,14 @@ class SmartSpeaker extends PhysicalDevice {
     }
 }
 
-abstract class Area<T extends SmartDevice> implements SmartDevice {
+interface AreaInterface extends SmartDevice {
+    void addChild(SmartDevice child);
+    List<SmartDevice> getChildren();
+}
+
+abstract class Area implements AreaInterface {
     protected String name;
-    protected List<T> children;
+    protected List<SmartDevice> children;
 
     public Area(String name) {
         this.name = name;
@@ -62,14 +78,14 @@ abstract class Area<T extends SmartDevice> implements SmartDevice {
 
     @Override
     public void activate() {
-        for (T child : children) {
+        for (SmartDevice child : children) {
             child.activate();
         }
     }
 
     @Override
     public void deactivate() {
-        for (T child : children) {
+        for (SmartDevice child : children) {
             child.deactivate();
         }
     }
@@ -77,7 +93,7 @@ abstract class Area<T extends SmartDevice> implements SmartDevice {
     @Override
     public String getStatus() {
         StringBuilder status = new StringBuilder(name + " Status:\n");
-        for (T child : children) {
+        for (SmartDevice child : children) {
             status.append(" - ").append(child.getStatus()).append("\n");
         }
         return status.toString();
@@ -86,33 +102,52 @@ abstract class Area<T extends SmartDevice> implements SmartDevice {
     @Override
     public double getPowerUsage() {
         double totalPowerUsage = 0.0;
-        for (T child : children) {
+        for (SmartDevice child : children) {
             totalPowerUsage += child.getPowerUsage();
         }
         return totalPowerUsage;
     }
 
-    public void addChild(T child) {
+    @Override
+    public Class<?> getDeviceType() {
+        return this.getClass();
+    }
+
+    @Override
+    public void addChild(SmartDevice child) {
         children.add(child);
+    }
+
+    @Override
+    public List<SmartDevice> getChildren() {
+        return children;
     }
 }
 
-class Room extends Area<SmartDevice> {
+class Room extends Area {
     public Room(String name) {
         super(name);
     }
 
     public void addDevice(SmartDevice device) {
+        Class <?> deviceType = device.getDeviceType();
+        if (deviceType == Room.class || deviceType == Home.class) {
+            throw new IllegalArgumentException("Cannot add a Room or Home as a child of a Room.");
+        }
         addChild(device);
     }
 }
 
-class Home extends Area<Room> {
+class Home extends Area {
     public Home(String name) {
         super(name);
     }
 
-    public void addRoom(Room room) {
+    public void addRoom(SmartDevice room) {
+        Class<?> deviceType = room.getDeviceType();
+        if (deviceType != Room.class) {
+            throw new IllegalArgumentException("Only Room instances can be added to Home.");
+        }
         addChild(room);
     }
 }
@@ -141,8 +176,8 @@ abstract class SmartDeviceDecorator implements SmartDevice {
     }
 
     @Override
-    public String getStatus() {
-        return device.getStatus();
+    public Class<?> getDeviceType() {
+        return device.getDeviceType();
     }
 }
 
@@ -179,6 +214,7 @@ class AccessRestricted extends SmartDeviceDecorator {
         isLocked = true;
     }
 
+    @Override
     public String getStatus() {
         if (isLocked) {
             return device.getStatus() + " (LOCKED)";
@@ -237,28 +273,70 @@ class PowerThrottled extends SmartDeviceDecorator {
     }
 }
 
-class EcoMode extends SmartDeviceDecorator {
+// AreaDecorator
+class AreaDecorator implements AreaInterface {
+    protected Area area;
+
+    public AreaDecorator(Area area) {
+        this.area = area;
+    }
+
+    @Override
+    public void activate() {
+        area.activate();
+    }
+
+    @Override
+    public void deactivate() {
+        area.deactivate();
+    }
+
+    @Override
+    public String getStatus() {
+        return area.getStatus();
+    }
+
+    @Override
+    public double getPowerUsage() {
+        return area.getPowerUsage();
+    }
+
+    @Override
+    public Class<?> getDeviceType() {
+        return area.getDeviceType();
+    }
+
+    @Override
+    public void addChild(SmartDevice child) {
+        area.addChild(child);
+    }
+
+    @Override
+    public List<SmartDevice> getChildren() {
+        return area.getChildren();
+    }
+}
+
+class EcoMode extends AreaDecorator {
     // private boolean isActive;
     private double powerLimit;
 
-    public EcoMode(Area<?> area, double powerLimit) {
+    public EcoMode(Area area, double powerLimit) {
         super(area);
         this.powerLimit = powerLimit;
     }
 
     @Override
     public void activate() {
-        device.activate();
-
-        Area<?> area = (Area<?>) device;
+        area.activate();
 
         double totalPower = area.getPowerUsage();
 
-        for (int i = area.children.size() - 1;
+        for (int i = area.getChildren().size() - 1;
             i >= 0 && totalPower > powerLimit;
             i--) {
 
-            SmartDevice physicalDevice = area.children.get(i);
+            SmartDevice physicalDevice = area.getChildren().get(i);
             physicalDevice.deactivate();
 
             totalPower = area.getPowerUsage();
@@ -267,7 +345,38 @@ class EcoMode extends SmartDeviceDecorator {
 
     @Override
     public String getStatus() {
-        Area<?> area = (Area<?>) device;
         return area.getStatus() + " (Eco Mode: " + powerLimit + "W limit)";
+    }
+}
+
+class GuestMode extends AreaDecorator {
+    private Set<Class<?>> allowed;
+
+    public GuestMode(Area area, Set<Class<?>> allowed) {
+        super(area);
+        this.allowed = allowed;
+    }
+
+    @Override
+    public void activate() {
+        area.activate();
+        applyGuestRestrictions(area);
+    }
+
+    private void applyGuestRestrictions(Area area) {
+        for (SmartDevice child : area.getChildren()) {
+            if (child.getDeviceType() == Room.class ||
+                child.getDeviceType() == Home.class) {
+                applyGuestRestrictions((Area) child);
+            }
+            else if (!allowed.contains(child.getDeviceType())) {
+                child.deactivate();
+            }
+        }
+    }
+
+    @Override
+    public String getStatus() {
+        return area.getStatus() + " (guest-restricted: only " + allowed + " allowed)";
     }
 }

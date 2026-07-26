@@ -71,11 +71,11 @@ public class SmartHomeTestRunner {
         testEcoModeShedsInReverseOrder();
         testEcoModePowerReporting();
 
-        // section("10. GUESTMODE FOR ROOM");
-        // testGuestModeAllowedTypes();
-        // testGuestModeBlocksDisallowed();
-        // testGuestModePowerOnlyAllowed();
-        // testGuestModeStatusAnnotation();
+        section("10. GUESTMODE FOR ROOM");
+        testGuestModeAllowedTypes();
+        testGuestModeBlocksDisallowed();
+        testGuestModePowerOnlyAllowed();
+        testGuestModeStatusAnnotation();
 
         // section("11. ORDER SENSITIVITY");
         // testThrottledThenEcoVsRawEco();
@@ -433,58 +433,58 @@ public class SmartHomeTestRunner {
         assertTrue("EcoMode power <= budget", eco.getPowerUsage() <= 100);
     }
 
-    // // ============================================================
-    // //  10. GUESTMODE — ROOM LEVEL
-    // // ============================================================
+    // ============================================================
+    //  10. GUESTMODE — ROOM LEVEL
+    // ============================================================
 
-    // static void testGuestModeAllowedTypes() {
-    //     Room r = new Room("Test");
-    //     SmartLight l = new SmartLight();
-    //     SmartSpeaker s = new SmartSpeaker();
-    //     r.addDevice(l);
-    //     r.addDevice(s);
+    static void testGuestModeAllowedTypes() {
+        Room r = new Room("Test");
+        SmartLight l = new SmartLight();
+        SmartSpeaker s = new SmartSpeaker();
+        r.addDevice(l);
+        r.addDevice(s);
 
-    //     Set<Class<?>> allowed = new HashSet<>(Arrays.asList(SmartLight.class, SmartSpeaker.class));
-    //     SmartDevice gm = new GuestMode(r, allowed);
-    //     gm.activate();
-    //     assertEquals("Light allowed", 10.0, l.getPowerUsage());
-    //     assertEquals("Speaker allowed", 5.0, s.getPowerUsage());
-    // }
+        Set<Class<?>> allowed = new HashSet<>(Arrays.asList(SmartLight.class, SmartSpeaker.class));
+        SmartDevice gm = new GuestMode(r, allowed);
+        gm.activate();
+        assertEquals("Light allowed", 10.0, l.getPowerUsage());
+        assertEquals("Speaker allowed", 5.0, s.getPowerUsage());
+    }
 
-    // static void testGuestModeBlocksDisallowed() {
-    //     Room r = new Room("Test");
-    //     SmartThermostat t = new SmartThermostat();
-    //     SmartLight l = new SmartLight();
-    //     r.addDevice(t);
-    //     r.addDevice(l);
+    static void testGuestModeBlocksDisallowed() {
+        Room r = new Room("Test");
+        SmartThermostat t = new SmartThermostat();
+        SmartLight l = new SmartLight();
+        r.addDevice(t);
+        r.addDevice(l);
 
-    //     Set<Class<?>> allowed = new HashSet<>(Arrays.asList(SmartLight.class));
-    //     SmartDevice gm = new GuestMode(r, allowed);
-    //     gm.activate();
-    //     assertEquals("Thermostat blocked by guest mode", 0.0, t.getPowerUsage());
-    //     assertEquals("Light allowed through guest mode", 10.0, l.getPowerUsage());
-    // }
+        Set<Class<?>> allowed = new HashSet<>(Arrays.asList(SmartLight.class));
+        SmartDevice gm = new GuestMode(r, allowed);
+        gm.activate();
+        assertEquals("Thermostat blocked by guest mode", 0.0, t.getPowerUsage());
+        assertEquals("Light allowed through guest mode", 10.0, l.getPowerUsage());
+    }
 
-    // static void testGuestModePowerOnlyAllowed() {
-    //     Room r = new Room("Test");
-    //     r.addDevice(new SmartLight());       // 10W — allowed
-    //     r.addDevice(new SmartThermostat());  // 150W — blocked
-    //     r.addDevice(new SmartSpeaker());     // 5W — allowed
+    static void testGuestModePowerOnlyAllowed() {
+        Room r = new Room("Test");
+        r.addDevice(new SmartLight());       // 10W — allowed
+        r.addDevice(new SmartThermostat());  // 150W — blocked
+        r.addDevice(new SmartSpeaker());     // 5W — allowed
 
-    //     Set<Class<?>> allowed = new HashSet<>(Arrays.asList(SmartLight.class, SmartSpeaker.class));
-    //     SmartDevice gm = new GuestMode(r, allowed);
-    //     gm.activate();
-    //     assertEquals("Guest power = allowed only", 15.0, gm.getPowerUsage());
-    // }
+        Set<Class<?>> allowed = new HashSet<>(Arrays.asList(SmartLight.class, SmartSpeaker.class));
+        SmartDevice gm = new GuestMode(r, allowed);
+        gm.activate();
+        assertEquals("Guest power = allowed only", 15.0, gm.getPowerUsage());
+    }
 
-    // static void testGuestModeStatusAnnotation() {
-    //     Room r = new Room("Test");
-    //     r.addDevice(new SmartThermostat());
+    static void testGuestModeStatusAnnotation() {
+        Room r = new Room("Test");
+        r.addDevice(new SmartThermostat());
 
-    //     Set<Class<?>> allowed = new HashSet<>(Arrays.asList(SmartLight.class));
-    //     SmartDevice gm = new GuestMode(r, allowed);
-    //     assertContains("Guest restricted annotation", gm.getStatus(), "guest-restricted");
-    // }
+        Set<Class<?>> allowed = new HashSet<>(Arrays.asList(SmartLight.class));
+        SmartDevice gm = new GuestMode(r, allowed);
+        assertContains("Guest restricted annotation", gm.getStatus(), "guest-restricted");
+    }
 
     // // ============================================================
     // //  11. ORDER SENSITIVITY
