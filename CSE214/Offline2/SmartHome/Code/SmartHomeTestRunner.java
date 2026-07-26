@@ -50,15 +50,15 @@ public class SmartHomeTestRunner {
         testTimerControlledManualDeactivateCancels();
         testTimerControlledStatusAnnotation();
 
-        // section("6. Upgrade — POWER THROTTLED");
-        // testPowerThrottledCaps();
-        // testPowerThrottledBelowCap();
-        // testPowerThrottledStatusAnnotation();
+        section("6. Upgrade — POWER THROTTLED");
+        testPowerThrottledCaps();
+        testPowerThrottledBelowCap();
+        testPowerThrottledStatusAnnotation();
 
-        // section("7. Multiple Upgrade — DEVICE LEVEL");
-        // testAccessRestrictedPlusTimerControlled();
-        // testAccessRestrictedPlusPowerThrottled();
-        // testTripleStack();
+        section("7. Multiple Upgrade — DEVICE LEVEL");
+        testAccessRestrictedPlusTimerControlled();
+        testAccessRestrictedPlusPowerThrottled();
+        testTripleStack();
 
         // section("8. UNIFORM INTERFACE");
         // testUpdatedDeviceIsSmartDevice();
@@ -281,77 +281,77 @@ public class SmartHomeTestRunner {
         assertNotContains("No timer annotation when off", tc.getStatus(), "auto-off");
     }
 
-    // // ============================================================
-    // //  6. POWER THROTTLE
-    // // ============================================================
+    // ============================================================
+    //  6. POWER THROTTLE
+    // ============================================================
 
-    // static void testPowerThrottledCaps() {
-    //     PowerThrottled pt = new PowerThrottled(new SmartThermostat(), 80);
-    //     pt.activate();
-    //     assertEquals("Throttled 150W to 80W", 80.0, pt.getPowerUsage());
-    // }
+    static void testPowerThrottledCaps() {
+        PowerThrottled pt = new PowerThrottled(new SmartThermostat(), 80);
+        pt.activate();
+        assertEquals("Throttled 150W to 80W", 80.0, pt.getPowerUsage());
+    }
 
-    // static void testPowerThrottledBelowCap() {
-    //     PowerThrottled pt = new PowerThrottled(new SmartLight(), 50);
-    //     pt.activate();
-    //     assertEquals("10W under 50W cap unchanged", 10.0, pt.getPowerUsage());
-    // }
+    static void testPowerThrottledBelowCap() {
+        PowerThrottled pt = new PowerThrottled(new SmartLight(), 50);
+        pt.activate();
+        assertEquals("10W under 50W cap unchanged", 10.0, pt.getPowerUsage());
+    }
 
-    // static void testPowerThrottledStatusAnnotation() {
-    //     PowerThrottled pt = new PowerThrottled(new SmartThermostat(), 80);
-    //     pt.activate();
-    //     assertContains("Throttled status annotation", pt.getStatus(), "throttled");
-    // }
+    static void testPowerThrottledStatusAnnotation() {
+        PowerThrottled pt = new PowerThrottled(new SmartThermostat(), 80);
+        pt.activate();
+        assertContains("Throttled status annotation", pt.getStatus(), "throttled");
+    }
 
-    // // ============================================================
-    // //  7. Multiple Upgrade
-    // // ============================================================
+    // ============================================================
+    //  7. Multiple Upgrade
+    // ============================================================
 
-    // static void testAccessRestrictedPlusTimerControlled() {
-    //     AccessRestricted ar = new AccessRestricted(new SmartLight(), 1234);
-    //     TimerControlled tc = new TimerControlled(ar, 60);
+    static void testAccessRestrictedPlusTimerControlled() {
+        AccessRestricted ar = new AccessRestricted(new SmartLight(), 1234);
+        TimerControlled tc = new TimerControlled(ar, 60);
 
-    //     // Locked: activate should fail
-    //     tc.activate();
-    //     assertEquals("Locked + timed: light stays off", 0.0, tc.getPowerUsage());
+        // Locked: activate should fail
+        tc.activate();
+        assertEquals("Locked + timed: light stays off", 0.0, tc.getPowerUsage());
 
-    //     // Unlock and activate
-    //     ar.unlock(1234);
-    //     tc.activate();
-    //     assertEquals("Unlocked + timed: light on", 10.0, tc.getPowerUsage());
+        // Unlock and activate
+        ar.unlock(1234);
+        tc.activate();
+        assertEquals("Unlocked + timed: light on", 10.0, tc.getPowerUsage());
 
-    //     // Timer expires
-    //     tc.simulateTimerExpiry();
-    //     assertEquals("Timer expired: light off", 0.0, tc.getPowerUsage());
-    // }
+        // Timer expires
+        tc.simulateTimerExpiry();
+        assertEquals("Timer expired: light off", 0.0, tc.getPowerUsage());
+    }
 
-    // static void testAccessRestrictedPlusPowerThrottled() {
-    //     AccessRestricted ar = new AccessRestricted(new SmartThermostat(), 5555);
-    //     PowerThrottled pt = new PowerThrottled(ar, 80);
-    //     ar.unlock(5555);
-    //     pt.activate();
-    //     assertEquals("Unlocked + throttled", 80.0, pt.getPowerUsage());
-    // }
+    static void testAccessRestrictedPlusPowerThrottled() {
+        AccessRestricted ar = new AccessRestricted(new SmartThermostat(), 5555);
+        PowerThrottled pt = new PowerThrottled(ar, 80);
+        ar.unlock(5555);
+        pt.activate();
+        assertEquals("Unlocked + throttled", 80.0, pt.getPowerUsage());
+    }
 
-    // static void testTripleStack() {
-    //     AccessRestricted ar = new AccessRestricted(new SmartThermostat(), 1111);
-    //     PowerThrottled pt = new PowerThrottled(ar, 80);
-    //     TimerControlled tc = new TimerControlled(pt, 120);
+    static void testTripleStack() {
+        AccessRestricted ar = new AccessRestricted(new SmartThermostat(), 1111);
+        PowerThrottled pt = new PowerThrottled(ar, 80);
+        TimerControlled tc = new TimerControlled(pt, 120);
 
-    //     // All locked
-    //     tc.activate();
-    //     assertEquals("Triple stack locked", 0.0, tc.getPowerUsage());
+        // All locked
+        tc.activate();
+        assertEquals("Triple stack locked", 0.0, tc.getPowerUsage());
 
-    //     // Unlock, activate, verify throttle
-    //     ar.unlock(1111);
-    //     tc.activate();
-    //     assertEquals("Triple stack unlocked + throttled", 80.0, tc.getPowerUsage());
-    //     assertContains("Triple stack timer annotation", tc.getStatus(), "auto-off");
+        // Unlock, activate, verify throttle
+        ar.unlock(1111);
+        tc.activate();
+        assertEquals("Triple stack unlocked + throttled", 80.0, tc.getPowerUsage());
+        assertContains("Triple stack timer annotation", tc.getStatus(), "auto-off");
 
-    //     // Timer expires
-    //     tc.simulateTimerExpiry();
-    //     assertEquals("Triple stack timer expired", 0.0, tc.getPowerUsage());
-    // }
+        // Timer expires
+        tc.simulateTimerExpiry();
+        assertEquals("Triple stack timer expired", 0.0, tc.getPowerUsage());
+    }
 
     // // ============================================================
     // //  8. UNIFORM INTERFACE
