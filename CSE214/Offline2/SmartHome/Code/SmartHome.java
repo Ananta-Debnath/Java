@@ -64,6 +64,7 @@ class SmartSpeaker extends PhysicalDevice {
 
 interface AreaInterface extends SmartDevice {
     void addChild(SmartDevice child);
+    void removeChild(SmartDevice child);
     List<SmartDevice> getChildren();
 }
 
@@ -119,6 +120,11 @@ abstract class Area implements AreaInterface {
     }
 
     @Override
+    public void removeChild(SmartDevice child) {
+        children.remove(child);
+    }
+
+    @Override
     public List<SmartDevice> getChildren() {
         return children;
     }
@@ -136,6 +142,14 @@ class Room extends Area {
         }
         addChild(device);
     }
+
+    public void removeDevice(SmartDevice device) {
+        Class<?> deviceType = device.getDeviceType();
+        if (deviceType == Room.class || deviceType == Home.class) {
+            throw new IllegalArgumentException("Cannot remove a Room or Home from a Room.");
+        }
+        removeChild(device);
+    }
 }
 
 class Home extends Area {
@@ -149,6 +163,14 @@ class Home extends Area {
             throw new IllegalArgumentException("Only Room instances can be added to Home.");
         }
         addChild(room);
+    }
+
+    public void removeRoom(SmartDevice room) {
+        Class<?> deviceType = room.getDeviceType();
+        if (deviceType != Room.class) {
+            throw new IllegalArgumentException("Only Room instances can be removed from Home.");
+        }
+        removeChild(room);
     }
 }
 
@@ -309,6 +331,11 @@ class AreaDecorator implements AreaInterface {
     @Override
     public void addChild(SmartDevice child) {
         area.addChild(child);
+    }
+
+    @Override
+    public void removeChild(SmartDevice child) {
+        area.removeChild(child);
     }
 
     @Override
