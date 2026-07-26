@@ -3,5 +3,7 @@ javac -d demoOut SmartHomeSpaghettiDemo.java
 java -cp demoOut SmartHomeSpaghettiDemo > demo.txt
 
 
+rmdir /s /q out
+rm -rf out
 javac -d out SmartHomeTestRunner.java SmartHome.java
 java -cp out SmartHomeTestRunner

@@ -97,12 +97,12 @@ abstract class Area<T extends SmartDevice> implements SmartDevice {
     }
 }
 
-class Room extends Area<PhysicalDevice> {
+class Room extends Area<SmartDevice> {
     public Room(String name) {
         super(name);
     }
 
-    public void addDevice(PhysicalDevice device) {
+    public void addDevice(SmartDevice device) {
         addChild(device);
     }
 }
@@ -138,6 +138,11 @@ abstract class SmartDeviceDecorator implements SmartDevice {
     @Override
     public double getPowerUsage() {
         return device.getPowerUsage();
+    }
+
+    @Override
+    public String getStatus() {
+        return device.getStatus();
     }
 }
 
@@ -229,5 +234,40 @@ class PowerThrottled extends SmartDeviceDecorator {
         else {
             return device.getStatus();
         }
+    }
+}
+
+class EcoMode extends SmartDeviceDecorator {
+    // private boolean isActive;
+    private double powerLimit;
+
+    public EcoMode(Area<?> area, double powerLimit) {
+        super(area);
+        this.powerLimit = powerLimit;
+    }
+
+    @Override
+    public void activate() {
+        device.activate();
+
+        Area<?> area = (Area<?>) device;
+
+        double totalPower = area.getPowerUsage();
+
+        for (int i = area.children.size() - 1;
+            i >= 0 && totalPower > powerLimit;
+            i--) {
+
+            SmartDevice physicalDevice = area.children.get(i);
+            physicalDevice.deactivate();
+
+            totalPower = area.getPowerUsage();
+        }
+    }
+
+    @Override
+    public String getStatus() {
+        Area<?> area = (Area<?>) device;
+        return area.getStatus() + " (Eco Mode: " + powerLimit + "W limit)";
     }
 }

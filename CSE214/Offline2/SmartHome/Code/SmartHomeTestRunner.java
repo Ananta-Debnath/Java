@@ -60,16 +60,16 @@ public class SmartHomeTestRunner {
         testAccessRestrictedPlusPowerThrottled();
         testTripleStack();
 
-        // section("8. UNIFORM INTERFACE");
-        // testUpdatedDeviceIsSmartDevice();
-        // testEcoRoomIsSmartDevice();
-        // testRoomAcceptsUpgradedChildren();
+        section("8. UNIFORM INTERFACE");
+        testUpdatedDeviceIsSmartDevice();
+        testEcoRoomIsSmartDevice();
+        testRoomAcceptsUpgradedChildren();
 
-        // section("9. ECOMODE FOR ROOM");
-        // testEcoModeWithinBudget();
-        // testEcoModeShedsOverBudget();
-        // testEcoModeShedsInReverseOrder();
-        // testEcoModePowerReporting();
+        section("9. ECOMODE FOR ROOM");
+        testEcoModeWithinBudget();
+        testEcoModeShedsOverBudget();
+        testEcoModeShedsInReverseOrder();
+        testEcoModePowerReporting();
 
         // section("10. GUESTMODE FOR ROOM");
         // testGuestModeAllowedTypes();
@@ -353,85 +353,85 @@ public class SmartHomeTestRunner {
         assertEquals("Triple stack timer expired", 0.0, tc.getPowerUsage());
     }
 
-    // // ============================================================
-    // //  8. UNIFORM INTERFACE
-    // // ============================================================
+    // ============================================================
+    //  8. UNIFORM INTERFACE
+    // ============================================================
 
-    // static void testUpdatedDeviceIsSmartDevice() {
-    //     SmartDevice d = new AccessRestricted(new SmartLight(), 1234);
-    //     assertNotNull("Upgraded device is SmartDevice", d);
-    //     // Should compile and work — if this method runs, the type check passed
-    //     assertTrue("Upgraded device has status", d.getStatus() != null);
-    // }
+    static void testUpdatedDeviceIsSmartDevice() {
+        SmartDevice d = new AccessRestricted(new SmartLight(), 1234);
+        assertNotNull("Upgraded device is SmartDevice", d);
+        // Should compile and work — if this method runs, the type check passed
+        assertTrue("Upgraded device has status", d.getStatus() != null);
+    }
 
-    // static void testEcoRoomIsSmartDevice() {
-    //     Room r = new Room("Test");
-    //     r.addDevice(new SmartLight());
-    //     SmartDevice d = new EcoMode(r, 100);
-    //     assertNotNull("Eco room is SmartDevice", d);
-    //     assertTrue("Eco room has status", d.getStatus() != null);
-    // }
+    static void testEcoRoomIsSmartDevice() {
+        Room r = new Room("Test");
+        r.addDevice(new SmartLight());
+        SmartDevice d = new EcoMode(r, 100);
+        assertNotNull("Eco room is SmartDevice", d);
+        assertTrue("Eco room has status", d.getStatus() != null);
+    }
 
-    // static void testRoomAcceptsUpgradedChildren() {
-    //     Room r = new Room("Test");
-    //     r.addDevice(new SmartLight());                                 // plain
-    //     r.addDevice(new AccessRestricted(new SmartThermostat(), 1234));  // upgraded
-    //     r.addDevice(new PowerThrottled(new SmartLight(), 5));            // upgraded
-    //     r.activate();
-    //     // Only plain light and throttled light should be on (thermostat is locked)
-    //     // plain light = 10W, throttled light = 5W, locked thermostat = 0W
-    //     assertEquals("Room with mixed children", 15.0, r.getPowerUsage());
-    // }
+    static void testRoomAcceptsUpgradedChildren() {
+        Room r = new Room("Test");
+        r.addDevice(new SmartLight());                                 // plain
+        r.addDevice(new AccessRestricted(new SmartThermostat(), 1234));  // upgraded
+        r.addDevice(new PowerThrottled(new SmartLight(), 5));            // upgraded
+        r.activate();
+        // Only plain light and throttled light should be on (thermostat is locked)
+        // plain light = 10W, throttled light = 5W, locked thermostat = 0W
+        assertEquals("Room with mixed children", 15.0, r.getPowerUsage());
+    }
 
-    // // ============================================================
-    // //  9. ECOMODE — ROOM LEVEL
-    // // ============================================================
+    // ============================================================
+    //  9. ECOMODE — ROOM LEVEL
+    // ============================================================
 
-    // static void testEcoModeWithinBudget() {
-    //     Room r = new Room("Test");
-    //     r.addDevice(new SmartLight());   // 10W
-    //     r.addDevice(new SmartLight());   // 10W
-    //     SmartDevice eco = new EcoMode(r, 100);
-    //     eco.activate();
-    //     assertEquals("EcoMode within budget", 20.0, eco.getPowerUsage());
-    // }
+    static void testEcoModeWithinBudget() {
+        Room r = new Room("Test");
+        r.addDevice(new SmartLight());   // 10W
+        r.addDevice(new SmartLight());   // 10W
+        SmartDevice eco = new EcoMode(r, 100);
+        eco.activate();
+        assertEquals("EcoMode within budget", 20.0, eco.getPowerUsage());
+    }
 
-    // static void testEcoModeShedsOverBudget() {
-    //     Room r = new Room("Test");
-    //     r.addDevice(new SmartLight());       // 10W
-    //     r.addDevice(new SmartThermostat());  // 150W
-    //     SmartDevice eco = new EcoMode(r, 100);
-    //     eco.activate();
-    //     // Thermostat (last added) should be shed: 10W remains
-    //     assertTrue("EcoMode sheds to fit budget", eco.getPowerUsage() <= 100);
-    // }
+    static void testEcoModeShedsOverBudget() {
+        Room r = new Room("Test");
+        r.addDevice(new SmartLight());       // 10W
+        r.addDevice(new SmartThermostat());  // 150W
+        SmartDevice eco = new EcoMode(r, 100);
+        eco.activate();
+        // Thermostat (last added) should be shed: 10W remains
+        assertTrue("EcoMode sheds to fit budget", eco.getPowerUsage() <= 100);
+    }
 
-    // static void testEcoModeShedsInReverseOrder() {
-    //     Room r = new Room("Test");
-    //     SmartLight l1 = new SmartLight();
-    //     SmartLight l2 = new SmartLight();
-    //     SmartThermostat t = new SmartThermostat();
-    //     r.addDevice(l1);   // 10W  — index 0, added first
-    //     r.addDevice(l2);   // 10W  — index 1
-    //     r.addDevice(t);    // 150W — index 2, added last → shed first
-    //     SmartDevice eco = new EcoMode(r, 100);
-    //     eco.activate();
-    //     // Thermostat (last) should be shed first, lights remain
-    //     assertEquals("First light stays on", 10.0, l1.getPowerUsage());
-    //     assertEquals("Second light stays on", 10.0, l2.getPowerUsage());
-    //     assertEquals("Thermostat shed", 0.0, t.getPowerUsage());
-    // }
+    static void testEcoModeShedsInReverseOrder() {
+        Room r = new Room("Test");
+        SmartLight l1 = new SmartLight();
+        SmartLight l2 = new SmartLight();
+        SmartThermostat t = new SmartThermostat();
+        r.addDevice(l1);   // 10W  — index 0, added first
+        r.addDevice(l2);   // 10W  — index 1
+        r.addDevice(t);    // 150W — index 2, added last → shed first
+        SmartDevice eco = new EcoMode(r, 100);
+        eco.activate();
+        // Thermostat (last) should be shed first, lights remain
+        assertEquals("First light stays on", 10.0, l1.getPowerUsage());
+        assertEquals("Second light stays on", 10.0, l2.getPowerUsage());
+        assertEquals("Thermostat shed", 0.0, t.getPowerUsage());
+    }
 
-    // static void testEcoModePowerReporting() {
-    //     Room r = new Room("Test");
-    //     r.addDevice(new SmartLight());       // 10W
-    //     r.addDevice(new SmartLight());       // 10W
-    //     r.addDevice(new SmartThermostat());  // 150W
-    //     SmartDevice eco = new EcoMode(r, 100);
-    //     eco.activate();
-    //     // After shedding, power should not exceed budget
-    //     assertTrue("EcoMode power <= budget", eco.getPowerUsage() <= 100);
-    // }
+    static void testEcoModePowerReporting() {
+        Room r = new Room("Test");
+        r.addDevice(new SmartLight());       // 10W
+        r.addDevice(new SmartLight());       // 10W
+        r.addDevice(new SmartThermostat());  // 150W
+        SmartDevice eco = new EcoMode(r, 100);
+        eco.activate();
+        // After shedding, power should not exceed budget
+        assertTrue("EcoMode power <= budget", eco.getPowerUsage() <= 100);
+    }
 
     // // ============================================================
     // //  10. GUESTMODE — ROOM LEVEL
