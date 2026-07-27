@@ -136,7 +136,7 @@ class Room extends Area {
     }
 
     public void addDevice(SmartDevice device) {
-        Class <?> deviceType = device.getDeviceType();
+        Class<?> deviceType = device.getDeviceType();
         if (deviceType == Room.class || deviceType == Home.class) {
             throw new IllegalArgumentException("Cannot add a Room or Home as a child of a Room.");
         }
