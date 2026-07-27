@@ -40,7 +40,7 @@ class SmartLight extends PhysicalDevice {
 
     @Override
     public double getPowerUsage() {
-        return isActive ? powerUsage : 0.0;
+        return isActive ? powerUsage : 0.0;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
     }
 }
 
@@ -297,9 +297,9 @@ class PowerThrottled extends SmartDeviceDecorator {
 
 // AreaDecorator
 class AreaDecorator implements AreaInterface {
-    protected Area area;
+    protected AreaInterface area;
 
-    public AreaDecorator(Area area) {
+    public AreaDecorator(AreaInterface area) {
         this.area = area;
     }
 
@@ -348,7 +348,7 @@ class EcoMode extends AreaDecorator {
     // private boolean isActive;
     private double powerLimit;
 
-    public EcoMode(Area area, double powerLimit) {
+    public EcoMode(AreaInterface area, double powerLimit) {
         super(area);
         this.powerLimit = powerLimit;
     }
@@ -379,7 +379,7 @@ class EcoMode extends AreaDecorator {
 class GuestMode extends AreaDecorator {
     private Set<Class<?>> allowed;
 
-    public GuestMode(Area area, Set<Class<?>> allowed) {
+    public GuestMode(AreaInterface area, Set<Class<?>> allowed) {
         super(area);
         this.allowed = allowed;
     }
@@ -390,7 +390,7 @@ class GuestMode extends AreaDecorator {
         applyGuestRestrictions(area);
     }
 
-    private void applyGuestRestrictions(Area area) {
+    private void applyGuestRestrictions(AreaInterface area) {
         for (SmartDevice child : area.getChildren()) {
             if (child.getDeviceType() == Room.class ||
                 child.getDeviceType() == Home.class) {
