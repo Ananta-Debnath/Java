@@ -217,8 +217,10 @@ public class DisasterAlertSystem {
         alice.displayReceivedAlerts();
         bob.displayReceivedAlerts();
         charlie.displayReceivedAlerts();
+        System.out.println();
 
         floodAlertSystem.removeObserver(bob);
+        floodAlertSystem.registerObserver(alice);
         floodAlertSystem.notifyObservers(floodAlert2);
 
         System.out.println("After removing Bob from flood alert system and sending a new flood alert:");
